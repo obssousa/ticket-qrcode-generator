@@ -13,7 +13,7 @@ interface QRData {
 
 const ExcelQRCodeUploader = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [fileData, setFileData] = useState<string[][]>([]); // Changed to string[][]
+  const [fileData, setFileData] = useState<string[][]>([]);
   const [labelField, setLabelField] = useState<string>("");
   const [qrField, setQrField] = useState<string>("");
   const [qrData, setQrData] = useState<QRData[]>([]);
@@ -32,8 +32,8 @@ const ExcelQRCodeUploader = () => {
         const data = new Uint8Array(event.target.result as ArrayBuffer);
         const workbook = XLSX.read(data, { type: "array" });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json<string[]>(sheet, { header: 1, defval: "" }); // Ensure string[] and handle empty cells
-        setFileData(json as string[][]); // Cast to string[][]
+        const json = XLSX.utils.sheet_to_json<string[]>(sheet, { header: 1, defval: "" });
+        setFileData(json as string[][]);
       } catch (error) {
         console.error("Error processing Excel file:", error);
         setFileData([]);
@@ -166,8 +166,7 @@ const ExcelQRCodeUploader = () => {
       </Button>
       <div className="flex flex-wrap gap-4 justify-center">
       {qrData.map(({ label }, index) => {
-          // Create a ref for each canvas
-          qrCodeCanvasRefs.current[index] = qrCodeCanvasRefs.current[index] || document.createElement('canvas'); // Ensure ref exists
+          qrCodeCanvasRefs.current[index] = qrCodeCanvasRefs.current[index] || document.createElement('canvas');
           return (
             <div className="p-4 flex flex-col items-center max-w-[240px]" key={index}>
               <canvas ref={(el) => { qrCodeCanvasRefs.current[index] = el || qrCodeCanvasRefs.current[index]; }} width={128} height={128} />
